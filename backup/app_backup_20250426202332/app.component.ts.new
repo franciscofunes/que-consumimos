@@ -1,0 +1,26 @@
+import { Component, OnInit, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { checkAuthState } from './store/auth/auth.actions';
+import { FirestoreSeedService } from './core/services/firestore-seed.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+  private store = inject(Store);
+  private seedService = inject(FirestoreSeedService);
+
+  async ngOnInit() {
+    // Check authentication state
+    this.store.dispatch(checkAuthState());
+    
+    // Initialize database if needed
+    try {
+      await this.seedService.initializeIfNeeded();
+    } catch (error) {
+      console.error('Error initializing database:', error);
+    }
+  }
+}

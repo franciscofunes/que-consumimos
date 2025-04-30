@@ -1,0 +1,25 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+  <div class="max-w-md w-full mx-auto p-8 bg-white rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold text-center mb-6">¿Qué Consumimos?</h1>
+    <p class="text-center text-gray-600 mb-8">Inicia sesión para continuar</p>
+    
+    @if (loading$ | async; as loading) {
+      <button 
+        (click)="signInWithGoogle()"
+        [disabled]="loading"
+        class="w-full flex items-center justify-center p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-300">
+        @if (loading) {
+          <span>Cargando...</span>
+        } @else {
+          <span>Continuar con Google</span>
+        }
+      </button>
+    }
+    
+    @if (error$ | async; as error) {
+      <div class="mt-4 p-3 bg-red-100 text-red-800 rounded-md">
+        {{ error }}
+      </div>
+    }
+  </div>
+</div>

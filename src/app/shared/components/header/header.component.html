@@ -1,0 +1,74 @@
+<header class="bg-white shadow">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+    <h1 
+      (click)="navigateTo('/dashboard')" 
+      class="text-xl font-bold text-gray-900 cursor-pointer">
+      ¿Qué Consumimos?
+    </h1>
+    
+    <div class="md:hidden">
+      <button 
+        (click)="toggleMenu()"
+        class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path [attr.d]="menuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'" 
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Desktop Navigation -->
+    <div class="hidden md:flex items-center space-x-6">
+      <button 
+        (click)="navigateTo('/products')" 
+        class="text-gray-600 hover:text-gray-900">
+        Productos
+      </button>
+      <button 
+        (click)="navigateTo('/product-scan')" 
+        class="text-gray-600 hover:text-gray-900">
+        Escanear
+      </button>
+      
+      <div class="flex items-center space-x-2">
+        <span class="text-sm text-gray-700">{{ getName() }}</span>
+        @if (getPhoto()) {
+          <img [src]="getPhoto()" class="h-8 w-8 rounded-full" alt="User avatar">
+        }
+        <button 
+          (click)="signOut()"
+          class="ml-2 px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded">
+          Salir
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mobile Menu -->
+  @if (menuOpen) {
+    <div class="md:hidden bg-white border-t">
+      <div class="px-4 py-2 space-y-1">
+        <button 
+          (click)="navigateTo('/dashboard')" 
+          class="block w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+          Dashboard
+        </button>
+        <button 
+          (click)="navigateTo('/products')" 
+          class="block w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+          Productos
+        </button>
+        <button 
+          (click)="navigateTo('/product-scan')" 
+          class="block w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+          Escanear
+        </button>
+        <button 
+          (click)="signOut()" 
+          class="block w-full text-left px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  }
+</header>
