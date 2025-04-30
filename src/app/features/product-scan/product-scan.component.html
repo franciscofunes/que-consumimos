@@ -4,122 +4,128 @@
   <div class="mt-8">
     <h1 class="text-2xl font-bold mb-4">Escanear Producto</h1>
     
-    <div *ngIf="isCapturing" class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-xl font-semibold mb-4">Cámara</h2>
-      
-      <div class="relative mb-4">
-        <video #video class="w-full h-auto border rounded"></video>
-        <canvas #canvas class="hidden"></canvas>
+    @if (isCapturing) {
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Cámara</h2>
+        
+        <div class="relative mb-4">
+          <video #video class="w-full h-auto border rounded"></video>
+          <canvas #canvas class="hidden"></canvas>
+        </div>
+        
+        <button 
+          (click)="captureImage()" 
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+          Capturar
+        </button>
       </div>
-      
-      <button 
-        (click)="captureImage()" 
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-        Capturar
-      </button>
-    </div>
+    }
     
-    <div *ngIf="!isCapturing" class="bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-xl font-semibold mb-4">Información del Producto</h2>
-      
-      <form [formGroup]="productForm" (ngSubmit)="submitProduct()">
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">Código de Barras</label>
-          <input 
-            type="text" 
-            formControlName="barcode"
-            class="w-full p-2 border rounded"
-            readonly>
-        </div>
+    @if (!isCapturing) {
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Información del Producto</h2>
         
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">Nombre del Producto</label>
-          <input 
-            type="text" 
-            formControlName="name"
-            class="w-full p-2 border rounded">
-        </div>
-        
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">Marca</label>
-          <input 
-            type="text" 
-            formControlName="brand"
-            class="w-full p-2 border rounded">
-        </div>
-        
-        <div class="grid grid-cols-2 gap-4 mb-4">
-          <div>
-            <label class="block text-gray-700 text-sm font-bold mb-2">Tamaño</label>
+        <form [formGroup]="productForm" (ngSubmit)="submitProduct()">
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Código de Barras</label>
             <input 
-              type="number" 
-              formControlName="size"
+              type="text" 
+              formControlName="barcode"
+              class="w-full p-2 border rounded"
+              readonly>
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Nombre del Producto</label>
+            <input 
+              type="text" 
+              formControlName="name"
               class="w-full p-2 border rounded">
           </div>
           
-          <div>
-            <label class="block text-gray-700 text-sm font-bold mb-2">Unidad</label>
-            <select 
-              formControlName="unit"
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Marca</label>
+            <input 
+              type="text" 
+              formControlName="brand"
               class="w-full p-2 border rounded">
-              <option value="g">Gramos (g)</option>
-              <option value="kg">Kilogramos (kg)</option>
-              <option value="ml">Mililitros (ml)</option>
-              <option value="l">Litros (l)</option>
-              <option value="unidad">Unidad</option>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-gray-700 text-sm font-bold mb-2">Tamaño</label>
+              <input 
+                type="number" 
+                formControlName="size"
+                class="w-full p-2 border rounded">
+            </div>
+            
+            <div>
+              <label class="block text-gray-700 text-sm font-bold mb-2">Unidad</label>
+              <select 
+                formControlName="unit"
+                class="w-full p-2 border rounded">
+                <option value="g">Gramos (g)</option>
+                <option value="kg">Kilogramos (kg)</option>
+                <option value="ml">Mililitros (ml)</option>
+                <option value="l">Litros (l)</option>
+                <option value="unidad">Unidad</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Categoría</label>
+            <select 
+              formControlName="categoryId"
+              class="w-full p-2 border rounded">
+              <option value="dairy">Lácteos</option>
+              <option value="grains">Granos y Cereales</option>
+              <option value="meat">Carnes</option>
+              <option value="produce">Frutas y Verduras</option>
+              <option value="canned">Enlatados</option>
+              <option value="snacks">Snacks</option>
+              <option value="beverages">Bebidas</option>
+              <option value="cleaning">Limpieza</option>
+              <option value="personal">Cuidado Personal</option>
+              <option value="other">Otros</option>
             </select>
           </div>
-        </div>
-        
-        <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">Categoría</label>
-          <select 
-            formControlName="categoryId"
-            class="w-full p-2 border rounded">
-            <option value="dairy">Lácteos</option>
-            <option value="grains">Granos y Cereales</option>
-            <option value="meat">Carnes</option>
-            <option value="produce">Frutas y Verduras</option>
-            <option value="canned">Enlatados</option>
-            <option value="snacks">Snacks</option>
-            <option value="beverages">Bebidas</option>
-            <option value="cleaning">Limpieza</option>
-            <option value="personal">Cuidado Personal</option>
-            <option value="other">Otros</option>
-          </select>
-        </div>
-        
-        <div class="mb-6">
-          <label class="block text-gray-700 text-sm font-bold mb-2">Frecuencia de Consumo</label>
-          <select 
-            formControlName="consumptionRate"
-            class="w-full p-2 border rounded">
-            <option value="low">Baja</option>
-            <option value="medium">Media</option>
-            <option value="high">Alta</option>
-          </select>
-        </div>
-        
-        <div class="flex space-x-4">
-          <button 
-            type="button" 
-            (click)="retryCapture()" 
-            class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
-            Volver a Escanear
-          </button>
           
-          <button 
-            type="submit" 
-            [disabled]="productForm.invalid || isLoading"
-            class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded disabled:bg-green-300">
-            Guardar Producto
-          </button>
-        </div>
-      </form>
-      
-      <div *ngIf="errorMessage" class="mt-4 p-3 bg-red-100 text-red-800 rounded-md">
-        {{ errorMessage }}
+          <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Frecuencia de Consumo</label>
+            <select 
+              formControlName="consumptionRate"
+              class="w-full p-2 border rounded">
+              <option value="low">Baja</option>
+              <option value="medium">Media</option>
+              <option value="high">Alta</option>
+            </select>
+          </div>
+          
+          <div class="flex space-x-4">
+            <button 
+              type="button" 
+              (click)="retryCapture()" 
+              class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded">
+              Volver a Escanear
+            </button>
+            
+            <button 
+              type="submit" 
+              [disabled]="productForm.invalid || isLoading"
+              class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded disabled:bg-green-300">
+              Guardar Producto
+            </button>
+          </div>
+        </form>
+        
+        @if (errorMessage) {
+          <div class="mt-4 p-3 bg-red-100 text-red-800 rounded-md">
+            {{ errorMessage }}
+          </div>
+        }
       </div>
-    </div>
+    }
   </div>
 </div>

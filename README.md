@@ -1,59 +1,131 @@
-# Myapp
+# Que-Consumimos: Smart Grocery Inventory App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.8.
+Que-Consumimos is a modern pantry management application designed to help users track grocery items, manage consumption rates, and streamline shopping experiences through barcode scanning technology.
 
-## Development server
+## About the Application
 
-To start a local development server, run:
+Que-Consumimos helps answer the everyday question "What should I consume?" by providing:
+
+- **Barcode Scanning**: Quickly add products to your inventory by scanning product barcodes
+- **Product Categorization**: Organize items by categories like dairy, grains, meat, produce, etc.
+- **Consumption Tracking**: Monitor usage patterns to better predict when you'll need to replenish items
+- **Inventory Management**: Keep track of what's in your pantry and when items might expire
+- **User Authentication**: Secure your personal inventory data with Firebase authentication
+
+## Technology Stack
+
+This application leverages a modern technology stack:
+
+- **Frontend**: Angular 19 (latest version) with standalone component architecture
+- **UI Framework**: Tailwind CSS v4 for responsive, utility-first styling
+- **State Management**: NgRx for predictable state management
+- **Backend/Database**: Firebase/Firestore for real-time data storage
+- **Authentication**: Firebase Authentication
+- **Deployment**: Firebase Hosting
+
+## Features
+
+- **Barcode Scanning**: Use your device's camera to scan and identify products
+- **Product Details**: View and edit comprehensive product information
+- **Consumption Rate Tracking**: Set and monitor how quickly you use different items
+- **Responsive Design**: Works seamlessly across desktop, tablet, and mobile devices
+- **Offline Support**: Basic functionality works even without an internet connection
+
+## Development Setup
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm (v10 or higher)
+- Angular CLI (v19.2.8)
+
+### Getting Started
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/yourusername/que-consumimos.git
+cd que-consumimos
+```
+
+2. **Install dependencies**
+
+```bash
+npm install
+```
+
+3. **Start the development server**
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+The application will be available at `http://localhost:4200/`.
 
-## Code scaffolding
+### Firebase Configuration
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+1. Create a Firebase project at [firebase.google.com](https://firebase.google.com)
+2. Enable Authentication and Firestore
+3. Add your Firebase configuration to the environment files
 
-```bash
-ng generate component component-name
+## Project Structure
+
+The application follows Angular 19's recommended standalone component architecture:
+
+```
+src/
+├── app/
+│   ├── core/           # Core services, guards, and interceptors
+│   ├── features/       # Feature modules (products, auth, etc.)
+│   ├── shared/         # Shared components, directives, and pipes
+│   ├── store/          # NgRx store, actions, reducers, and effects
+│   └── models/         # TypeScript interfaces and models
+├── assets/             # Static assets
+└── environments/       # Environment configurations
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Building for Production
 
 ```bash
-ng generate --help
+ng build --configuration production
 ```
 
-## Building
+Build artifacts will be stored in the `dist/` directory.
 
-To build the project run:
+## Testing
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Unit Tests
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### End-to-End Tests
 
 ```bash
 ng e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Deployment
 
-## Additional Resources
+The application can be deployed to Firebase Hosting:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+ng build --configuration production
+firebase deploy
+```
+
+## Contributing
+
+We welcome contributions! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- The Angular team for the incredible framework
+- Tailwind CSS for the utility-first CSS framework
+- Firebase for backend services
+- The open source community for their invaluable resources

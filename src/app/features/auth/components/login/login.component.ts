@@ -5,8 +5,6 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
 
-// src/app/core/services/auth.service.ts
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

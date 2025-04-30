@@ -3,12 +3,20 @@ import { Router } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { Store } from '@ngrx/store';
 import { addProduct } from '../../store/product/product.actions';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Product } from '../../models/product.model';
+import { CommonModule } from '@angular/common';
+import { HeaderComponent } from 'src/app/shared/components/header/header.component';
 
 @Component({
   selector: 'app-product-scan',
-  templateUrl: './product-scan.component.html'
+  templateUrl: './product-scan.component.html',
+  standalone: true,
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule,
+    HeaderComponent
+  ]
 })
 export class ProductScanComponent implements OnInit {
   @ViewChild('video') videoElement!: ElementRef<HTMLVideoElement>;
