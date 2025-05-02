@@ -5,15 +5,17 @@ import { Observable } from 'rxjs';
 import { Product } from '../../models/product.model';
 import { loadProducts } from '../../store/product/product.actions';
 import { signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-product-list',
-  templateUrl: './product-list.component.html'
+  templateUrl: './product-list.component.html',
+  standalone: true,
+  imports: [AsyncPipe] // No need for CommonModule with the new control flow syntax
 })
 export class ProductListComponent implements OnInit {
   private store = inject(Store<{ products: { items: Product[], loading: boolean } }>);
   private router = inject(Router);
-  
   products$: Observable<Product[]>;
   loading$: Observable<boolean>;
   searchTerm = signal('');

@@ -2,57 +2,68 @@
   <div class="max-w-7xl mx-auto">
     <div class="mb-6 flex justify-between items-center">
       <h1 class="text-2xl font-bold text-gray-900">Productos</h1>
-      
-      <button 
-        (click)="scanNewProduct()" 
+      <button
+        (click)="scanNewProduct()"
         class="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 flex items-center gap-2">
         <span>Escanear Producto</span>
       </button>
     </div>
-    
+
     <div class="mb-4">
-      <input 
-        type="text" 
-        placeholder="Buscar productos..." 
-        class="w-full p-2 border rounded-md"
-        [value]="searchTerm()"
-        (input)="updateSearch(($any($event.target).value))">
+      <input
+      #searchBox
+      type="text"
+      placeholder="Buscar productos..."
+      class="w-full p-2 border rounded-md"
+      [value]="searchTerm()"
+      (input)="updateSearch(searchBox.value)">
     </div>
-    
-    <div *ngIf="loading$ | async" class="flex justify-center my-8">
-      <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
-    </div>
-    
-    <div *ngIf="(products$ | async)?.length === 0 && !(loading$ | async)" class="text-center py-8">
-      <p class="text-gray-500">No hay productos. Escanea tu primer producto para comenzar.</p>
-    </div>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div 
-        *ngFor="let product of products$ | async" 
-        class="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-md transition"
-        (click)="viewProductDetails(product.id || '')">
-        
-        <div class="flex items-center gap-3">
-          <div *ngIf="product.imageUrl" class="h-16 w-16 bg-gray-200 rounded-md flex-shrink-0">
-            <img [src]="product.imageUrl" class="h-full w-full object-cover rounded-md" [alt]="product.name">
-          </div>
-          <div *ngIf="!product.imageUrl" class="h-16 w-16 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center text-gray-400">
-            <span>Sin imagen</span>
-          </div>
-          
-          <div>
-            <h2 class="font-semibold">{{ product.name }}</h2>
-            <p *ngIf="product.brand" class="text-sm text-gray-600">{{ product.brand }}</p>
-            <p class="text-sm">{{ product.size }} {{ product.unit }}</p>
-          </div>
-        </div>
-        
-        <div class="mt-2 flex justify-between">
-          <span class="text-xs px-2 py-1 bg-gray-100 rounded-full">{{ product.categoryId }}</span>
-          <span class="text-xs text-gray-500">Consumo: {{ product.consumptionRate || 'N/A' }}</span>
-        </div>
+
+    @if (loading$ | async) {
+      <div class="flex justify-center my-8">
+        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
       </div>
-    </div>
+    }
+
+    @if (!(loading$ | async) && (products$ | async)?.length === 0) {
+      <div class="text-center py-8">
+        <p class="text-gray-500">No hay productos. Escanea tu primer producto para comenzar.</p>
+      </div>
+    }
+
+    @if ((products$ | async)!.length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (product of products$ | async; track product.id) {
+          <div
+            class="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-md transition"
+            (click)="viewProductDetails(product.id)">
+            <div class="flex items-center gap-3">
+              @if (product.imageUrl) {
+                <div class="h-16 w-16 bg-gray-200 rounded-md flex-shrink-0">
+                  <img [src]="product.imageUrl" class="h-full w-full object-cover rounded-md" [alt]="product.name">
+                </div>
+              } @else {
+                <div class="h-14 w-16 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center text-gray-400">
+                  <span>Sin imagen</span>
+                </div>
+              }
+
+              <div>
+                <h2 class="font-semibold">{{ product.name }}</h2>
+                @if (product.brand) {
+                  <p class="text-sm text-gray-600">{{ product.brand }}</p>
+                }
+                <p class="text-sm">{{ product.size }} {{ product.unit }}</p>
+              </div>
+            </div>
+
+            <div class="mt-2 flex justify-between">
+              <span class="text-xs px-2 py-1 bg-gray-100 rounded-full">{{ product.categoryId }}</span>
+              <span class="text-xs text-gray-500">Consumo: {{ product.consumptionRate || 'N/A' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </div>
 </div>
