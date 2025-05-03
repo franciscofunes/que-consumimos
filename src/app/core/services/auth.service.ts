@@ -1,48 +1,62 @@
-import { Injectable, inject } from '@angular/core';
-import { Observable, from, BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
-
-// Firebase v9+ imports
-import { Auth, authState, GoogleAuthProvider, signInWithPopup, signOut, User, UserCredential } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
+import { Injectable, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Auth, GoogleAuthProvider, User, authState, signInWithPopup, signOut } from '@angular/fire/auth';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, from } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private userSubject = new BehaviorSubject<User | null>(null);
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  
-  user$ = this.userSubject.asObservable();
-  loading$ = this.loadingSubject.asObservable();
-  
-  // Inject Firebase services using the new inject function
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
+  private router = inject(Router);
   
+  // Create signals for auth state
+  readonly loading = signal<boolean>(false);
+  
+  // Keep a compatibility loading$ for older components
+  private loadingSubject = new BehaviorSubject<boolean>(false);
+  loading$ = this.loadingSubject.asObservable();
+  
+  // Create user signal
+  readonly user = toSignal(authState(this.auth), { initialValue: null });
+  
+  // Computed value for authentication status - returns a boolean value, not a function
   get isAuthenticated(): boolean {
-    return !!this.userSubject.value;
+    return !!this.user();
   }
   
-  get currentUser(): User | null {
-    return this.userSubject.value;
-  }
-
   constructor() {
-    // Subscribe to auth state changes using the new authState method
-    authState(this.auth).subscribe(user => {
-      this.userSubject.next(user);
-    });
+    // Keep loading signal and subject in sync
+    this.loading.set(false);
+    this.loadingSubject.next(false);
+  }
+  
+  // Get current user methods
+  getUserId(): string | null {
+    return this.user()?.uid || null;
+  }
+  
+  getUserName(): string | null {
+    return this.user()?.displayName || null;
+  }
+  
+  getUserEmail(): string | null {
+    return this.user()?.email || null;
+  }
+  
+  getUserPhoto(): string | null {
+    return this.user()?.photoURL || null;
   }
 
-  // Observable for compatibility with NgRx effects
-  getCurrentUser(): Observable<User | null> {
-    return authState(this.auth);
-  }
-
-  // Sign in with Google
-  signInWithGoogle(): Observable<UserCredential> {
+  // Auth methods - keep Observable pattern for backward compatibility
+  signInWithGoogle(): Observable<any> {
+    this.loading.set(true);
     this.loadingSubject.next(true);
+    
     const provider = new GoogleAuthProvider();
     
     return from(signInWithPopup(this.auth, provider)).pipe(
@@ -51,22 +65,27 @@ export class AuthService {
           if (credential.user) {
             this.updateUserData(credential.user);
           }
+          this.loading.set(false);
           this.loadingSubject.next(false);
         },
-        error: () => this.loadingSubject.next(false)
+        error: () => {
+          this.loading.set(false);
+          this.loadingSubject.next(false);
+        }
       })
     );
   }
 
-  // Sign out
-  signOut(): Observable<void> {
+  signOut(): Promise<void> {
+    this.loading.set(true);
     this.loadingSubject.next(true);
-    return from(signOut(this.auth)).pipe(
-      tap(() => this.loadingSubject.next(false))
-    );
+    
+    return signOut(this.auth).finally(() => {
+      this.loading.set(false);
+      this.loadingSubject.next(false);
+    });
   }
 
-  // Store user data in Firestore
   private async updateUserData(user: User): Promise<void> {
     const userRef = doc(this.firestore, `users/${user.uid}`);
     
@@ -83,9 +102,19 @@ export class AuthService {
 
   // Get user's household ID
   async getUserHousehold(userId: string): Promise<string | null> {
-    const userRef = doc(this.firestore, `users/${userId}`);
-    const userDoc = await getDoc(userRef);
-    const userData = userDoc.data() as any;
-    return userData?.householdId || null;
+    try {
+      const userRef = doc(this.firestore, `users/${userId}`);
+      const userDoc = await getDoc(userRef);
+      
+      if (!userDoc.exists()) {
+        return null;
+      }
+      
+      const userData = userDoc.data() as { householdId?: string };
+      return userData?.householdId || null;
+    } catch (error) {
+      console.error('Error getting user household:', error);
+      return null;
+    }
   }
 }

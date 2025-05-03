@@ -2,30 +2,36 @@ export interface Product {
   id: string;
   name: string;
   barcode?: string;
-  imageUrl?: string;
-  size?: string;
+  brand?: string;
+  size?: number;
   unit?: string;
   categoryId?: string;
-  consumptionRate?: number;
-  brand?: string;
   description?: string;
+  imageUrl?: string;
+  consumptionRate?: 'low' | 'medium' | 'high'; // String literal type
   nutritionalInfo?: {
-    calories?: number;
-    protein?: number;
-    carbs?: number;
-    fats?: number;
-    [key: string]: any;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fats: number;
   };
-  [key: string]: any; // Index signature for additional properties
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-// A partial version of the Product for creation where ID is optional
-export interface ProductCreateDTO extends Omit<Product, 'id'> {
-  id?: string;
+// Add the missing DTO interfaces
+export type ProductCreateDTO = Omit<Product, 'id' | 'createdAt' | 'updatedAt'>;
+
+export type ProductUpdateDTO = Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>;
+
+// Additional helper types you might need
+export interface ProductFilter {
+  category?: string;
+  consumptionRate?: 'low' | 'medium' | 'high';
+  searchTerm?: string;
 }
 
-// A minimal version for updates
-export interface ProductUpdateDTO {
-  id: string;
-  [key: string]: any;
+export interface ProductPagination {
+  limit: number;
+  afterId?: string;
 }

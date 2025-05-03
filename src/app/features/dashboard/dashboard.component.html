@@ -1,24 +1,99 @@
-<div class="container mx-auto p-4">
+<div class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 pb-12">
   <app-header></app-header>
   
-  <div class="mt-8">
-    <h1 class="text-2xl font-bold mb-4">Dashboard</h1>
+  <div class="container mx-auto px-4 py-6">
+    <!-- Welcome Section -->
+    <div class="mb-10 text-center">
+      <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">¡Bienvenido a tu panel!</h1>
+      <p class="text-blue-100 max-w-xl mx-auto">Gestiona tus productos y organiza tu consumo de manera eficiente.</p>
+    </div>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-xl font-semibold mb-3">Mis Productos</h2>
-        <p class="text-gray-600 mb-4">Gestiona tu inventario de productos.</p>
-        <button routerLink="/products" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-          Ver Productos
-        </button>
+    <!-- Main Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      <!-- Mi Productos Card -->
+      <div class="group bg-white bg-opacity-90 backdrop-blur-sm p-8 rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+        <div class="flex items-start gap-6 mb-6">
+          <div class="flex-shrink-0">
+            <div class="w-16 h-16 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 transition-all duration-300 group-hover:bg-blue-600 group-hover:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors duration-300">Mis Productos</h2>
+            <p class="text-gray-600 mb-6">Gestiona tu inventario de productos y visualiza toda tu colección.</p>
+            
+            <button 
+              routerLink="/products" 
+              class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-md transition-all duration-200 transform group-hover:translate-x-1">
+              <span>Ver Productos</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
       
-      <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-xl font-semibold mb-3">Escanear Producto</h2>
-        <p class="text-gray-600 mb-4">Añade un nuevo producto escaneando su código de barras.</p>
-        <button routerLink="/product-scan" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
-          Escanear
-        </button>
+      <!-- Escanear Producto Card -->
+      <div class="group bg-white bg-opacity-90 backdrop-blur-sm p-8 rounded-2xl shadow-xl transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+        <div class="flex items-start gap-6 mb-6">
+          <div class="flex-shrink-0">
+            <div class="w-16 h-16 rounded-xl bg-green-100 flex items-center justify-center text-green-600 transition-all duration-300 group-hover:bg-green-600 group-hover:text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-1 group-hover:text-green-600 transition-colors duration-300">Escanear Producto</h2>
+            <p class="text-gray-600 mb-6">Añade un nuevo producto escaneando su código de barras con la cámara.</p>
+            
+            <button 
+              routerLink="/product-scan" 
+              class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-xl shadow-md transition-all duration-200 transform group-hover:translate-x-1">
+              <span>Escanear</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Decorative Elements -->
+    <div class="hidden md:block absolute bottom-10 right-10 z-0">
+      <div class="w-32 h-32 rounded-full bg-white opacity-10"></div>
+    </div>
+    <div class="hidden md:block absolute top-40 left-10 z-0">
+      <div class="w-20 h-20 rounded-full bg-white opacity-10"></div>
+    </div>
+    
+    <!-- Quick Stats Section (Optional) -->
+    <div class="mt-12 max-w-5xl mx-auto">
+      <div class="bg-white bg-opacity-90 backdrop-blur-sm p-6 rounded-2xl shadow-lg">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Estadísticas Rápidas</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-4 bg-blue-50 rounded-xl">
+            <p class="text-sm text-blue-700">Total de Productos</p>
+            <p class="text-2xl font-bold text-blue-900">{{ totalProducts || '0' }}</p>
+          </div>
+          <div class="p-4 bg-green-50 rounded-xl">
+            <p class="text-sm text-green-700">Añadidos hoy</p>
+            <p class="text-2xl font-bold text-green-900">{{ productsAddedToday || '0' }}</p>
+          </div>
+          <div class="p-4 bg-purple-50 rounded-xl">
+            <p class="text-sm text-purple-700">Categorías</p>
+            <p class="text-2xl font-bold text-purple-900">{{ totalCategories || '0' }}</p>
+          </div>
+          <div class="p-4 bg-pink-50 rounded-xl">
+            <p class="text-sm text-pink-700">Consumo Reciente</p>
+            <p class="text-2xl font-bold text-pink-900">{{ recentConsumption || '0' }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

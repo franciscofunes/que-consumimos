@@ -1,1 +1,11 @@
-<router-outlet></router-outlet>
+<div class="min-h-screen flex flex-col bg-gray-50">
+  <main class="flex-grow">
+    <router-outlet></router-outlet>
+  </main>
+
+  @if (!isAuthRoute()) {
+    <app-desktop-footer></app-desktop-footer>
+    <app-footer-menu></app-footer-menu>
+  }
+
+</div>

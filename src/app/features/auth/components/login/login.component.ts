@@ -15,11 +15,18 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   
-  loading$: Observable<boolean> = this.authService.loading$;
+  // Using the loading$ Observable from AuthService
+  loading$: Observable<boolean>;
   error$: Observable<string | null> = of(null);
+  
+  constructor() {
+    // Use the existing loading$ Observable from the service
+    this.loading$ = this.authService.loading$;
+  }
   
   signInWithGoogle(): void {
     this.error$ = of(null);
+    // Continuing to use the Observable pattern since the updated AuthService supports it
     this.authService.signInWithGoogle().pipe(
       tap(() => {
         this.router.navigate(['/dashboard']);

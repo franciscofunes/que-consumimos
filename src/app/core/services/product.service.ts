@@ -1,15 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, map, from, of } from 'rxjs';
+import { Firestore, collection, doc, getDoc, getDocs, limit, orderBy, query, setDoc, startAfter, where } from '@angular/fire/firestore';
+import { Product, ProductCreateDTO } from '../../models/product.model';
+import { AuthService } from './auth.service';
 
-// Modern Firebase imports
-import { Firestore, collection, doc, getDoc, getDocs, query, where, collectionData, docData, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
-
-// Import the product model
-import { Product, ProductCreateDTO, ProductUpdateDTO } from '../../models/product.model';
-
-// Type guard to check if a property exists on a product
-function hasProperty(obj: any, prop: string): boolean {
-  return Object.prototype.hasOwnProperty.call(obj, prop) && obj[prop] !== undefined;
+interface GetProductsOptions {
+  afterId?: string | null;
+  limit?: number;
+  category?: string;
 }
 
 @Injectable({
@@ -17,105 +14,181 @@ function hasProperty(obj: any, prop: string): boolean {
 })
 export class ProductService {
   private firestore: Firestore = inject(Firestore);
-  
-  constructor() { }
+  private authService = inject(AuthService);
 
-  getProductByBarcode(barcode: string): Observable<Product | null> {
-    const productsRef = collection(this.firestore, 'products');
-    const q = query(productsRef, where('barcode', '==', barcode));
-    
-    return from(getDocs(q)).pipe(
-      map(actions => {
-        if (actions.empty) {
-          return null;
+  async getProducts(options: GetProductsOptions = {}): Promise<Product[]> {
+    try {
+      const userId = this.authService.getUserId();
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      
+      const householdId = await this.authService.getUserHousehold(userId);
+      
+      if (!householdId) {
+        return [];
+      }
+      
+      // Build query
+      const productsRef = collection(this.firestore, `households/${householdId}/products`);
+      
+      // Start building the query with order
+      let productsQuery = query(productsRef, orderBy('createdAt', 'desc'));
+      
+      // Add category filter if specified
+      if (options.category) {
+        productsQuery = query(productsQuery, where('categoryId', '==', options.category));
+      }
+      
+      // Add pagination
+      if (options.limit) {
+        productsQuery = query(productsQuery, limit(options.limit));
+      }
+      
+      // Add cursor if specified
+      if (options.afterId) {
+        const cursorDoc = await getDoc(doc(productsRef, options.afterId));
+        if (cursorDoc.exists()) {
+          productsQuery = query(productsQuery, startAfter(cursorDoc));
         }
-        
-        const doc = actions.docs[0];
-        const data = doc.data();
-        const id = doc.id;
-        
-        return { id, ...data } as Product;
-      })
-    );
-  }
-  
-  getProductById(id: string): Observable<Product | null> {
-    const productRef = doc(this.firestore, `products/${id}`);
-    
-    return from(getDoc(productRef)).pipe(
-      map(doc => {
-        if (!doc.exists()) {
-          return null;
-        }
-        
-        const data = doc.data();
-        return { id: doc.id, ...data } as Product;
-      })
-    );
-  }
-  
-  getAllProducts(): Observable<Product[]> {
-    const productsRef = collection(this.firestore, 'products');
-    
-    return collectionData(productsRef, { idField: 'id' }) as Observable<Product[]>;
-  }
-  
-  searchProducts(term: string): Observable<Product[]> {
-    if (!term.trim()) {
-      return of([]);
+      }
+      
+      // Execute query
+      const querySnapshot = await getDocs(productsQuery);
+      
+      // Convert to Product objects
+      const products: Product[] = [];
+      
+      querySnapshot.forEach(doc => {
+        const data = doc.data() as Omit<Product, 'id'>;
+        products.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt ? (data.createdAt as any).toDate() : undefined,
+          updatedAt: data.updatedAt ? (data.updatedAt as any).toDate() : undefined
+        });
+      });
+      
+      return products;
+    } catch (error) {
+      console.error('Error getting products:', error);
+      throw error;
     }
-    
-    const searchTerm = term.toLowerCase();
-    const productsRef = collection(this.firestore, 'products');
-    
-    // Since Firestore doesn't support direct text search, we'll fetch all products
-    // and filter client-side (for small collections)
-    return collectionData(productsRef, { idField: 'id' }).pipe(
-      map(products => 
-        products.filter(product => {
-          const nameMatch = hasProperty(product, 'name') && 
-            product['name'].toLowerCase().includes(searchTerm);
-          const descMatch = hasProperty(product, 'description') && 
-            product['description'].toLowerCase().includes(searchTerm);
-          return nameMatch || descMatch;
-        }) as Product[]
-      )
-    );
   }
 
-  // Methods to match exactly what's being called in the effects
-  createProduct(product: ProductCreateDTO): Observable<Product> {
-    const productsRef = collection(this.firestore, 'products');
-    
-    // Remove the id field if it exists, as Firestore will generate one
-    const { id, ...productData } = product;
-    
-    return from(addDoc(productsRef, productData)).pipe(
-      map(docRef => {
-        return {
-          id: docRef.id,
-          ...productData
-        } as Product;
-      })
-    );
+  async getProductById(productId: string): Promise<Product | null> {
+    try {
+      const userId = this.authService.getUserId();
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      
+      const householdId = await this.authService.getUserHousehold(userId);
+      
+      if (!householdId) {
+        return null;
+      }
+      
+      const productRef = doc(this.firestore, `households/${householdId}/products/${productId}`);
+      const productDoc = await getDoc(productRef);
+      
+      if (!productDoc.exists()) {
+        return null;
+      }
+      
+      const data = productDoc.data() as Omit<Product, 'id'>;
+      
+      return {
+        id: productDoc.id,
+        ...data,
+        createdAt: data.createdAt ? (data.createdAt as any).toDate() : undefined,
+        updatedAt: data.updatedAt ? (data.updatedAt as any).toDate() : undefined
+      };
+    } catch (error) {
+      console.error('Error getting product by ID:', error);
+      throw error;
+    }
+  }
+  
+  // Add a method to get product by barcode
+  async getProductByBarcode(barcode: string): Promise<Product | null> {
+    try {
+      const userId = this.authService.getUserId();
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      
+      const householdId = await this.authService.getUserHousehold(userId);
+      
+      if (!householdId) {
+        return null;
+      }
+      
+      // Create a query for products with matching barcode
+      const productsRef = collection(this.firestore, `households/${householdId}/products`);
+      const barcodeQuery = query(productsRef, where('barcode', '==', barcode));
+      
+      const querySnapshot = await getDocs(barcodeQuery);
+      
+      // If no product matches, return null
+      if (querySnapshot.empty) {
+        return null;
+      }
+      
+      // Return the first matching product
+      const productDoc = querySnapshot.docs[0];
+      const data = productDoc.data() as Omit<Product, 'id'>;
+      
+      return {
+        id: productDoc.id,
+        ...data,
+        createdAt: data.createdAt ? (data.createdAt as any).toDate() : undefined,
+        updatedAt: data.updatedAt ? (data.updatedAt as any).toDate() : undefined
+      };
+    } catch (error) {
+      console.error('Error getting product by barcode:', error);
+      throw error;
+    }
   }
 
-  updateProduct(product: ProductUpdateDTO): Observable<void> {
-    const { id, ...updateData } = product;
-    if (!id) {
-      throw new Error('Product ID is required for updating');
+  async createProduct(product: ProductCreateDTO): Promise<Product> {
+    try {
+      const userId = this.authService.getUserId();
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+      
+      const householdId = await this.authService.getUserHousehold(userId);
+      
+      if (!householdId) {
+        throw new Error('User does not have a household');
+      }
+      
+      const productsRef = collection(this.firestore, `households/${householdId}/products`);
+      const newProductRef = doc(productsRef);
+      
+      const now = new Date();
+      const productData = {
+        ...product,
+        createdAt: now,
+        updatedAt: now
+      };
+      
+      await setDoc(newProductRef, productData);
+      
+      return {
+        id: newProductRef.id,
+        ...product,
+        createdAt: now,
+        updatedAt: now
+      };
+    } catch (error) {
+      console.error('Error creating product:', error);
+      throw error;
     }
-    
-    const productRef = doc(this.firestore, `products/${id}`);
-    return from(updateDoc(productRef, updateData));
-  }
-
-  removeProduct(productId: string): Observable<void> {
-    if (!productId) {
-      throw new Error('Product ID is required for removal');
-    }
-    
-    const productRef = doc(this.firestore, `products/${productId}`);
-    return from(deleteDoc(productRef));
   }
 }

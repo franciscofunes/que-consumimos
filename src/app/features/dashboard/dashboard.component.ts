@@ -23,4 +23,26 @@ export class DashboardComponent {
   signOut(): void {
     this.store.dispatch(logout());
   }
+
+  // create property totalProducts that will return the total of products in the store
+  get totalProducts(): number {
+    return 0;
+  }
+
+  // add property productAddedToday
+  get productsAddedToday(): number {
+    return 0;
+  }
+
+  // add property totalCategories
+  get totalCategories(): number {
+    return 0;
+  }
+
+  // add property recentConsumptions
+  get recentConsumption(): number {
+    return 0;
+  }
+
+
 }

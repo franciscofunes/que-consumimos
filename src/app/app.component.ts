@@ -1,9 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { checkAuthState } from './store/auth/auth.actions';
-import { FirestoreSeedService } from './core/services/firestore-seed.service';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { FooterMenuComponent } from './shared/components/footer-menu/footer-menu.component';
+import { DesktopFooterComponent } from './shared/components/desktop-footer/desktop-footer.component';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-root',
@@ -11,20 +12,16 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet
+    RouterOutlet,
+    FooterMenuComponent,
+    DesktopFooterComponent
   ]
 })
-export class AppComponent implements OnInit {
-  private store = inject(Store);
-  private seedService = inject(FirestoreSeedService);
+export class AppComponent {
+  title = 'qué-consumimos';
+  constructor(private router: Router) {}
 
-  async ngOnInit() {
-    this.store.dispatch(checkAuthState());
-
-    try {
-      await this.seedService.initializeIfNeeded();
-    } catch (error) {
-      console.error('Error initializing database:', error);
-    }
+  isAuthRoute(): boolean {
+    return this.router.url.includes('/auth');
   }
 }

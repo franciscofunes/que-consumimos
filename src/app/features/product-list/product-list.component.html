@@ -1,69 +1,306 @@
-<div class="min-h-screen bg-gray-100 p-4">
-  <div class="max-w-7xl mx-auto">
-    <div class="mb-6 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-gray-900">Productos</h1>
+<div
+  class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 pb-12"
+>
+  <app-header></app-header>
+
+  <div class="container mx-auto px-4 py-6">
+    <!-- Header Section -->
+    <div
+      class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8"
+    >
+      <h1 class="text-3xl font-bold text-white">Productos</h1>
+
+      <!-- Scan Button -->
       <button
         (click)="scanNewProduct()"
-        class="px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 flex items-center gap-2">
-        <span>Escanear Producto</span>
+        class="inline-flex items-center gap-2 px-6 py-3 bg-white bg-opacity-20 backdrop-blur-sm hover:bg-opacity-30 text-white font-medium rounded-xl shadow-md transition-all duration-200 hover:shadow-lg group"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 transition-transform duration-300 group-hover:scale-110 text-gray-800"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+          />
+        </svg>
+        <span class="text-gray-600">Escanear Producto</span>
       </button>
     </div>
 
-    <div class="mb-4">
-      <input
-      #searchBox
-      type="text"
-      placeholder="Buscar productos..."
-      class="w-full p-2 border rounded-md"
-      [value]="searchTerm()"
-      (input)="updateSearch(searchBox.value)">
+    <!-- Search Box with Glass Morphism Effect -->
+    <div class="mb-6 max-w-xl mx-auto">
+      <div class="relative">
+        <input
+          #searchBox
+          type="text"
+          placeholder="Buscar productos..."
+          class="w-full p-4 pl-12 pr-10 bg-white bg-opacity-90 backdrop-blur-sm border-none rounded-full shadow-md focus:outline-none focus:ring-2 focus:ring-blue-400 focus:shadow-lg transition-all duration-200"
+          [value]="searchTerm()"
+          (input)="updateSearch(searchBox.value)"
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6 text-gray-400 absolute left-4 top-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+
+        <!-- Clear button -->
+        <button
+          *ngIf="searchTerm()"
+          (click)="updateSearch('')"
+          class="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
 
+    <!-- Loading State -->
     @if (loading$ | async) {
-      <div class="flex justify-center my-8">
-        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
-      </div>
+    <app-loading
+      [size]="'lg'"
+      [message]="'Cargando tus productos'"
+    ></app-loading>
     }
 
+    <!-- Empty State -->
     @if (!(loading$ | async) && (products$ | async)?.length === 0) {
-      <div class="text-center py-8">
-        <p class="text-gray-500">No hay productos. Escanea tu primer producto para comenzar.</p>
+    <div
+      class="flex flex-col items-center justify-center bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl shadow-lg p-12 my-12 max-w-md mx-auto"
+    >
+      <div
+        class="w-24 h-24 mb-6 rounded-full bg-blue-100 flex items-center justify-center"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-12 w-12 text-blue-500"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+          />
+        </svg>
       </div>
+      <h3 class="text-xl font-semibold text-gray-800 mb-2">No hay productos</h3>
+      <p class="text-gray-600 text-center mb-6">
+        Escanea tu primer producto para comenzar
+      </p>
+      <button
+        (click)="scanNewProduct()"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-medium rounded-lg shadow-md transition-all duration-200 transform hover:translate-y-[-2px]"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+        <span>Añadir Producto</span>
+      </button>
+    </div>
     }
 
+    <!-- Product Grid -->
     @if ((products$ | async)!.length > 0) {
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        @for (product of products$ | async; track product.id) {
-          <div
-            class="bg-white rounded-lg shadow p-4 cursor-pointer hover:shadow-md transition"
-            (click)="viewProductDetails(product.id)">
-            <div class="flex items-center gap-3">
-              @if (product.imageUrl) {
-                <div class="h-16 w-16 bg-gray-200 rounded-md flex-shrink-0">
-                  <img [src]="product.imageUrl" class="h-full w-full object-cover rounded-md" [alt]="product.name">
-                </div>
-              } @else {
-                <div class="h-14 w-16 bg-gray-200 rounded-md flex-shrink-0 flex items-center justify-center text-gray-400">
-                  <span>Sin imagen</span>
-                </div>
-              }
-
-              <div>
-                <h2 class="font-semibold">{{ product.name }}</h2>
-                @if (product.brand) {
-                  <p class="text-sm text-gray-600">{{ product.brand }}</p>
-                }
-                <p class="text-sm">{{ product.size }} {{ product.unit }}</p>
-              </div>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+    >
+      @for (product of products$ | async; track product.id) {
+      <div
+        class="group bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+        (click)="viewProductDetails(product.id)"
+      >
+        <div class="p-6">
+          <div class="flex items-center gap-4">
+            @if (product.imageUrl) {
+            <div
+              class="h-16 w-16 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden group-hover:ring-2 group-hover:ring-blue-500 transition-all duration-200"
+            >
+              <img
+                [src]="product.imageUrl"
+                class="h-full w-full object-cover"
+                [alt]="product.name"
+              />
             </div>
+            } @else {
+            <div
+              class="h-16 w-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg flex-shrink-0 flex items-center justify-center text-blue-400 group-hover:from-blue-200 group-hover:to-indigo-200 transition-all duration-200"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            }
 
-            <div class="mt-2 flex justify-between">
-              <span class="text-xs px-2 py-1 bg-gray-100 rounded-full">{{ product.categoryId }}</span>
-              <span class="text-xs text-gray-500">Consumo: {{ product.consumptionRate || 'N/A' }}</span>
+            <div class="flex-1 min-w-0">
+              <h2
+                class="text-lg font-semibold text-gray-800 mb-0.5 truncate group-hover:text-blue-600 transition-colors duration-200"
+              >
+                {{ product.name }}
+              </h2>
+              @if (product.brand) {
+              <p class="text-gray-600 text-sm truncate">{{ product.brand }}</p>
+              }
+              <p class="text-sm text-gray-500 truncate">
+                {{ product.size }} {{ product.unit }}
+              </p>
             </div>
           </div>
-        }
+
+          <div
+            class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center"
+          >
+            <span
+              class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+              >{{ product.categoryId }}</span
+            >
+
+            <!-- Consumption Rate Indicator -->
+            <div class="flex items-center gap-1">
+              @if (product.consumptionRate === 'high') {
+              <div class="flex">
+                <span
+                  class="h-2 w-2 rounded-full bg-red-500 animate-pulse"
+                ></span>
+                <span class="h-2 w-2 rounded-full bg-red-500 ml-0.5"></span>
+                <span class="h-2 w-2 rounded-full bg-red-500 ml-0.5"></span>
+              </div>
+              } @else if (product.consumptionRate === 'medium') {
+              <div class="flex">
+                <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
+                <span class="h-2 w-2 rounded-full bg-yellow-500 ml-0.5"></span>
+                <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
+              </div>
+              } @else if (product.consumptionRate === 'low') {
+              <div class="flex">
+                <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
+                <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
+                <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
+              </div>
+              } @else {
+              <div class="flex">
+                <span class="h-2 w-2 rounded-full bg-gray-300"></span>
+                <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
+                <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
+              </div>
+              }
+              <span class="text-xs text-gray-500 ml-1">{{
+                product.consumptionRate || "N/A"
+              }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- View Details Indicator -->
+        <div
+          class="px-6 py-3 bg-gray-50 border-t border-gray-100 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        >
+          <span
+            class="text-xs text-blue-600 font-medium flex items-center gap-1"
+          >
+            Ver detalles
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3 w-3"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
       </div>
-    }
+      }
+    </div>
+
+    <!-- Pagination or Load More (Optional) -->
+    @if (hasMoreProducts) {
+    <div class="mt-8 text-center">
+      <button
+        (click)="loadMoreProducts()"
+        [disabled]="isLoadingMore"
+        class="px-6 py-2 bg-white bg-opacity-20 backdrop-blur-sm hover:bg-opacity-30 text-white font-medium rounded-full shadow-md inline-flex items-center gap-2 transition-all duration-200"
+      >
+        @if (isLoadingMore) {
+        <div
+          class="h-4 w-4 border-2 border-t-transparent border-white rounded-full animate-spin"
+        ></div>
+        <span>Cargando más...</span>
+        } @else {
+        <span>Cargar más productos</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+        }
+      </button>
+    </div>
+    } }
   </div>
 </div>
