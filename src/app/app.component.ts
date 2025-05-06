@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { FooterMenuComponent } from './shared/components/footer-menu/footer-menu.component';
+import { MobileFooterMenuComponent } from './shared/components/footer-menu/mobile-footer-menu.component';
 import { DesktopFooterComponent } from './shared/components/desktop-footer/desktop-footer.component';
 import { Router } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule,
     RouterOutlet,
-    FooterMenuComponent,
+    MobileFooterMenuComponent,
     DesktopFooterComponent
   ]
 })

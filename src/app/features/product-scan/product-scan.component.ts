@@ -1,10 +1,10 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HeaderComponent } from '../../shared/components/header/header.component';
 import { ProductService } from '../../core/services/product.service';
-import { Product, ProductCreateDTO } from '../../models/product.model';
+import { ProductCreateDTO } from '../../models/product.model';
+import { HeaderComponent } from '../../shared/components/header/header.component';
 
 @Component({
   selector: 'app-product-scan',
@@ -91,15 +91,11 @@ export class ProductScanComponent implements AfterViewInit, OnDestroy {
       return;
     }
     
-    // Set canvas dimensions to match video
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     
-    // Draw current video frame to canvas
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
-    // Here you would normally process the image to read a barcode
-    // For now, let's simulate finding a barcode
+
     this.processBarcode('sample-barcode-12345');
   }
   
@@ -112,27 +108,29 @@ export class ProductScanComponent implements AfterViewInit, OnDestroy {
     
     // Check if the product already exists
     this.productService.getProductByBarcode(barcode)
-      .then((product) => {
-        this.isLoading = false;
-        
-        if (product) {
-          // Product exists, prefill the form
-          this.productForm.patchValue({
-            name: product.name,
-            brand: product.brand || '',
-            size: product.size || '',
-            unit: product.unit || 'g',
-            categoryId: product.categoryId || 'other',
-            consumptionRate: product.consumptionRate || 'medium'
-          });
+      .subscribe({
+        next: (product) => {
+          this.isLoading = false;
+          
+          if (product) {
+            // Product exists, prefill the form
+            this.productForm.patchValue({
+              name: product.name,
+              brand: product.brand || '',
+              size: product.size || '',
+              unit: product.unit || 'g',
+              categoryId: product.categoryId || 'other',
+              consumptionRate: product.consumptionRate || 'medium'
+            });
+          }
+          
+          // Switch to form view
+          this.isCapturing = false;
+        },
+        error: (err: Error) => {
+          this.isLoading = false;
+          this.errorMessage = `Error al buscar el producto: ${err.message}`;
         }
-        
-        // Switch to form view
-        this.isCapturing = false;
-      })
-      .catch((err: Error) => {
-        this.isLoading = false;
-        this.errorMessage = `Error al buscar el producto: ${err.message}`;
       });
   }
   
@@ -148,14 +146,15 @@ export class ProductScanComponent implements AfterViewInit, OnDestroy {
       ...this.productForm.value
     };
     
-    // Create the product
     this.productService.createProduct(productData)
-      .then(() => {
-        this.router.navigate(['/products']);
-      })
-      .catch((err: Error) => {
-        this.isLoading = false;
-        this.errorMessage = `Error al guardar el producto: ${err.message}`;
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/products']);
+        },
+        error: (err: Error) => {
+          this.isLoading = false;
+          this.errorMessage = `Error al guardar el producto: ${err.message}`;
+        }
       });
   }
   
@@ -171,7 +170,6 @@ export class ProductScanComponent implements AfterViewInit, OnDestroy {
       consumptionRate: 'medium'
     });
     
-    // Restart camera if needed
     if (!this.stream) {
       this.startCamera();
     }

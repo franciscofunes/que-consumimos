@@ -3,7 +3,8 @@ import { Product, ProductCreateDTO, ProductUpdateDTO } from '../../models/produc
 
 // Load Products
 export const loadProducts = createAction(
-  '[Product] Load Products'
+  '[Product] Load Products',
+  props<{ options?: { category?: string; limit?: number; afterId?: string } }>()
 );
 
 export const loadProductsSuccess = createAction(
@@ -40,7 +41,7 @@ export const updateProduct = createAction(
 
 export const updateProductSuccess = createAction(
   '[Product] Update Product Success',
-  props<{ product: ProductUpdateDTO }>()
+  props<{ product: Product }>()
 );
 
 export const updateProductFailure = createAction(

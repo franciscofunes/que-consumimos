@@ -82,15 +82,15 @@
     </div>
 
     <!-- Loading State -->
-    @if (loading$ | async) {
+    @if (loading()) {
     <app-loading
       [size]="'lg'"
-      [message]="'Cargando tus productos'"
+      [message]=""
     ></app-loading>
     }
 
     <!-- Empty State -->
-    @if (!(loading$ | async) && (products$ | async)?.length === 0) {
+    @if (!loading() && filteredProducts().length === 0) {
     <div
       class="flex flex-col items-center justify-center bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl shadow-lg p-12 my-12 max-w-md mx-auto"
     >
@@ -140,25 +140,25 @@
     }
 
     <!-- Product Grid -->
-    @if ((products$ | async)!.length > 0) {
+    @if (filteredProducts().length > 0) {
     <div
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
     >
-      @for (product of products$ | async; track product.id) {
+      @for (product of filteredProducts(); track product.id) {
       <div
         class="group bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
         (click)="viewProductDetails(product.id)"
       >
         <div class="p-6">
           <div class="flex items-center gap-4">
-            @if (product.imageUrl) {
+            @if (product?.imageUrl) {
             <div
               class="h-16 w-16 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden group-hover:ring-2 group-hover:ring-blue-500 transition-all duration-200"
             >
               <img
                 [src]="product.imageUrl"
                 class="h-full w-full object-cover"
-                [alt]="product.name"
+                [alt]="product.name || 'Producto'"
               />
             </div>
             } @else {
@@ -186,13 +186,13 @@
               <h2
                 class="text-lg font-semibold text-gray-800 mb-0.5 truncate group-hover:text-blue-600 transition-colors duration-200"
               >
-                {{ product.name }}
+                {{ product?.name || 'Sin nombre' }}
               </h2>
-              @if (product.brand) {
+              @if (product?.brand) {
               <p class="text-gray-600 text-sm truncate">{{ product.brand }}</p>
               }
               <p class="text-sm text-gray-500 truncate">
-                {{ product.size }} {{ product.unit }}
+                {{ product?.size || 0 }} {{ product?.unit || 'unidad' }}
               </p>
             </div>
           </div>
@@ -202,12 +202,12 @@
           >
             <span
               class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
-              >{{ product.categoryId }}</span
+              >{{ product?.categoryId || 'Sin categoría' }}</span
             >
 
             <!-- Consumption Rate Indicator -->
             <div class="flex items-center gap-1">
-              @if (product.consumptionRate === 'high') {
+              @if (product?.consumptionRate === 'high') {
               <div class="flex">
                 <span
                   class="h-2 w-2 rounded-full bg-red-500 animate-pulse"
@@ -215,16 +215,14 @@
                 <span class="h-2 w-2 rounded-full bg-red-500 ml-0.5"></span>
                 <span class="h-2 w-2 rounded-full bg-red-500 ml-0.5"></span>
               </div>
-              } @else if (product.consumptionRate === 'medium') {
+              } @else if (product?.consumptionRate === 'medium') {
               <div class="flex">
                 <span class="h-2 w-2 rounded-full bg-yellow-500"></span>
                 <span class="h-2 w-2 rounded-full bg-yellow-500 ml-0.5"></span>
                 <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
               </div>
-              } @else if (product.consumptionRate === 'low') {
+              } @else if (product?.consumptionRate === 'low') {
               <div class="flex">
-                <span class="h-2 w-2 rounded-full bg-green-500"></span>
-                <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
                 <span class="h-2 w-2 rounded-full bg-green-500"></span>
                 <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
                 <span class="h-2 w-2 rounded-full bg-gray-300 ml-0.5"></span>
@@ -237,7 +235,7 @@
               </div>
               }
               <span class="text-xs text-gray-500 ml-1">{{
-                product.consumptionRate || "N/A"
+                product?.consumptionRate || "N/A"
               }}</span>
             </div>
           </div>
@@ -270,14 +268,14 @@
     </div>
 
     <!-- Pagination or Load More (Optional) -->
-    @if (hasMoreProducts) {
+    @if (hasMoreProducts()) {
     <div class="mt-8 text-center">
       <button
         (click)="loadMoreProducts()"
-        [disabled]="isLoadingMore"
+        [disabled]="isLoadingMore()"
         class="px-6 py-2 bg-white bg-opacity-20 backdrop-blur-sm hover:bg-opacity-30 text-white font-medium rounded-full shadow-md inline-flex items-center gap-2 transition-all duration-200"
       >
-        @if (isLoadingMore) {
+        @if (isLoadingMore()) {
         <div
           class="h-4 w-4 border-2 border-t-transparent border-white rounded-full animate-spin"
         ></div>

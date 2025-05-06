@@ -3,28 +3,60 @@ export interface Product {
   name: string;
   barcode?: string;
   brand?: string;
+  categoryId?: string;
   size?: number;
   unit?: string;
-  categoryId?: string;
-  description?: string;
+  consumptionRate?: 'low' | 'medium' | 'high';
   imageUrl?: string;
-  consumptionRate?: 'low' | 'medium' | 'high'; // String literal type
-  nutritionalInfo?: {
-    calories: number;
-    protein: number;
-    carbs: number;
-    fats: number;
-  };
   createdAt?: Date;
   updatedAt?: Date;
+  createdBy?: string;
+  nutritionalInfo?: {
+    calories?: number;
+    protein?: number;
+    carbs?: number;
+    fats?: number;
+  };
+  description?: string;
 }
 
-// Add the missing DTO interfaces
-export type ProductCreateDTO = Omit<Product, 'id' | 'createdAt' | 'updatedAt'>;
+export interface ProductCreateDTO {
+  name: string;
+  barcode?: string;
+  brand?: string;
+  categoryId?: string;
+  size?: number;
+  unit?: string;
+  consumptionRate?: 'low' | 'medium' | 'high';
+  imageUrl?: string;
+  nutritionalInfo?: {
+    calories?: number;
+    protein?: number;
+    carbs?: number;
+    fats?: number;
+  };
+  description?: string;
+}
 
-export type ProductUpdateDTO = Partial<Omit<Product, 'id' | 'createdAt' | 'updatedAt'>>;
+export interface ProductUpdateDTO {
+  id: string;
+  name?: string;
+  barcode?: string;
+  brand?: string;
+  categoryId?: string;
+  size?: number;
+  unit?: string;
+  consumptionRate?: 'low' | 'medium' | 'high';
+  imageUrl?: string;
+  nutritionalInfo?: {
+    calories?: number;
+    protein?: number;
+    carbs?: number;
+    fats?: number;
+  };
+  description?: string;
+}
 
-// Additional helper types you might need
 export interface ProductFilter {
   category?: string;
   consumptionRate?: 'low' | 'medium' | 'high';

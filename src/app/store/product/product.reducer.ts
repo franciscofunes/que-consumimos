@@ -17,7 +17,6 @@ export const initialState: ProductState = {
 export const productReducer = createReducer(
   initialState,
   
-  // Load products
   on(ProductActions.loadProducts, state => ({
     ...state,
     loading: true,
@@ -34,7 +33,6 @@ export const productReducer = createReducer(
     loading: false
   })),
   
-  // Add product
   on(ProductActions.addProduct, state => ({
     ...state,
     loading: true
@@ -50,13 +48,11 @@ export const productReducer = createReducer(
     loading: false
   })),
   
-  // Update product
   on(ProductActions.updateProduct, state => ({
     ...state,
     loading: true
   })),
   on(ProductActions.updateProductSuccess, (state, { product }) => {
-    // Create a full product object by merging the update with the existing product
     const updatedItems = state.items.map(item => 
       item.id === product.id ? { ...item, ...product } : item
     );
@@ -73,7 +69,6 @@ export const productReducer = createReducer(
     loading: false
   })),
   
-  // Delete product
   on(ProductActions.deleteProduct, state => ({
     ...state,
     loading: true

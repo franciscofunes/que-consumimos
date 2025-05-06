@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import * as ProductActions from './product.actions';
 import { ProductService } from '../../core/services/product.service';
-import { Product, ProductCreateDTO, ProductUpdateDTO } from '../../models/product.model';
 
 @Injectable()
 export class ProductEffects {
@@ -16,12 +15,23 @@ export class ProductEffects {
   loadProducts$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProductActions.loadProducts),
-      switchMap(() =>
-        this.productService.getAllProducts().pipe(
-          map(products => ProductActions.loadProductsSuccess({ products })),
-          catchError(error => of(ProductActions.loadProductsFailure({ error })))
-        )
-      )
+      tap(action => console.log('loadProducts action received:', action)), // Add this
+      switchMap((action) => {
+        const options = action.options || {};
+        console.log('Calling productService.getProducts with options:', options); // Add this
+        
+        return this.productService.getProducts(options).pipe(
+          tap(response => console.log('Raw service response:', response)), // Add this
+          map(products => {
+            console.log('Products loaded:', products);
+            return ProductActions.loadProductsSuccess({ products });
+          }),
+          catchError(error => {
+            console.error('Error loading products:', error);
+            return of(ProductActions.loadProductsFailure({ error: error.toString() }));
+          })
+        );
+      })
     )
   );
 
@@ -29,9 +39,12 @@ export class ProductEffects {
     this.actions$.pipe(
       ofType(ProductActions.addProduct),
       switchMap(({ product }) =>
-        this.productService.createProduct(product as ProductCreateDTO).pipe(
+        this.productService.createProduct(product).pipe(
           map(newProduct => ProductActions.addProductSuccess({ product: newProduct })),
-          catchError(error => of(ProductActions.addProductFailure({ error })))
+          catchError(error => {
+            console.error('Error adding product:', error);
+            return of(ProductActions.addProductFailure({ error: error.toString() }));
+          })
         )
       )
     )
@@ -41,9 +54,12 @@ export class ProductEffects {
     this.actions$.pipe(
       ofType(ProductActions.updateProduct),
       switchMap(({ product }) =>
-        this.productService.updateProduct(product as ProductUpdateDTO).pipe(
-          map(() => ProductActions.updateProductSuccess({ product })),
-          catchError(error => of(ProductActions.updateProductFailure({ error })))
+        this.productService.updateProduct(product).pipe(
+          map(updatedProduct => ProductActions.updateProductSuccess({ product: updatedProduct })),
+          catchError(error => {
+            console.error('Error updating product:', error);
+            return of(ProductActions.updateProductFailure({ error: error.toString() }));
+          })
         )
       )
     )
@@ -55,7 +71,10 @@ export class ProductEffects {
       switchMap(({ productId }) =>
         this.productService.removeProduct(productId).pipe(
           map(() => ProductActions.deleteProductSuccess({ productId })),
-          catchError(error => of(ProductActions.deleteProductFailure({ error })))
+          catchError(error => {
+            console.error('Error deleting product:', error);
+            return of(ProductActions.deleteProductFailure({ error: error.toString() }));
+          })
         )
       )
     )

@@ -12,30 +12,31 @@ import { tap } from 'rxjs/operators';
 export class AuthService {
   private auth: Auth = inject(Auth);
   private firestore: Firestore = inject(Firestore);
-  private router = inject(Router);
   
-  // Create signals for auth state
   readonly loading = signal<boolean>(false);
   
-  // Keep a compatibility loading$ for older components
   private loadingSubject = new BehaviorSubject<boolean>(false);
   loading$ = this.loadingSubject.asObservable();
   
-  // Create user signal
   readonly user = toSignal(authState(this.auth), { initialValue: null });
   
-  // Computed value for authentication status - returns a boolean value, not a function
   get isAuthenticated(): boolean {
     return !!this.user();
   }
   
   constructor() {
-    // Keep loading signal and subject in sync
     this.loading.set(false);
     this.loadingSubject.next(false);
+    
+    authState(this.auth).subscribe(user => {
+      if (user) {
+        this.ensureUserHasHousehold(user.uid).catch(err => 
+          console.error('Error ensuring household:', err)
+        );
+      }
+    });
   }
   
-  // Get current user methods
   getUserId(): string | null {
     return this.user()?.uid || null;
   }
@@ -52,7 +53,6 @@ export class AuthService {
     return this.user()?.photoURL || null;
   }
 
-  // Auth methods - keep Observable pattern for backward compatibility
   signInWithGoogle(): Observable<any> {
     this.loading.set(true);
     this.loadingSubject.next(true);
@@ -100,21 +100,78 @@ export class AuthService {
     return setDoc(userRef, data, { merge: true });
   }
 
-  // Get user's household ID
   async getUserHousehold(userId: string): Promise<string | null> {
     try {
       const userRef = doc(this.firestore, `users/${userId}`);
       const userDoc = await getDoc(userRef);
       
       if (!userDoc.exists()) {
-        return null;
+        console.warn('User document not found, creating basic user data');
+        // Create basic user data if document doesn't exist
+        await setDoc(userRef, {
+          uid: userId,
+          displayName: 'Usuario',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        });
+        // Now create a household and link it
+        return await this.createHouseholdForUser(userId);
       }
       
       const userData = userDoc.data() as { householdId?: string };
-      return userData?.householdId || null;
+      
+      // If user already has a household, return it
+      if (userData?.householdId) {
+        return userData.householdId;
+      }
+      
+      // If we get here, user doesn't have a household
+      // Create one automatically and return its ID
+      return await this.createHouseholdForUser(userId);
     } catch (error) {
       console.error('Error getting user household:', error);
       return null;
+    }
+  }
+  
+  private async ensureUserHasHousehold(userId: string): Promise<void> {
+    try {
+      const householdId = await this.getUserHousehold(userId);
+      if (!householdId) {
+        await this.createHouseholdForUser(userId);
+      }
+    } catch (error) {
+      console.error('Error ensuring user has household:', error);
+    }
+  }
+
+  private async createHouseholdForUser(userId: string): Promise<string> {
+    try {
+      const householdId = `household_${userId}`;
+      const householdRef = doc(this.firestore, 'households', householdId);
+      
+      const householdData = {
+        name: 'Mi Hogar',
+        createdBy: userId,
+        members: [userId],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      
+      await setDoc(householdRef, householdData);
+      console.log('Created new household:', householdId);
+      
+      const userRef = doc(this.firestore, 'users', userId);
+      await setDoc(userRef, { 
+        householdId: householdId,
+        updatedAt: new Date()
+      }, { merge: true });
+      
+      console.log('Linked household to user:', userId);
+      return householdId;
+    } catch (error) {
+      console.error('Error creating household for user:', error);
+      throw error;
     }
   }
 }
