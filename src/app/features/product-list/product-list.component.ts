@@ -146,4 +146,35 @@ export class ProductListComponent implements OnInit {
       options: { limit: this.pageSize } 
     }));
   }
+
+  getCategoryName(categoryId: string | undefined): string {
+    if (!categoryId) return 'Sin categoría';
+    
+    const categoryMap: Record<string, string> = {
+      'dairy': 'Lácteos',
+      'grains': 'Granos y Cereales',
+      'meat': 'Carnes',
+      'produce': 'Frutas y Verduras',
+      'canned': 'Enlatados',
+      'snacks': 'Snacks',
+      'beverages': 'Bebidas',
+      'cleaning': 'Limpieza',
+      'personal': 'Cuidado Personal',
+      'other': 'Otros'
+    };
+    
+    return categoryMap[categoryId] || categoryId;
+  }
+  
+  getConsumptionRateName(rate: string | undefined): string {
+    if (!rate) return 'N/A';
+    
+    const rateMap: Record<string, string> = {
+      'low': 'Baja',
+      'medium': 'Media',
+      'high': 'Alta'
+    };
+    
+    return rateMap[rate] || rate;
+  }
 }

@@ -1,25 +1,12 @@
-<div
-  class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 pb-12"
->
+<div class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 pb-12">
   <app-header></app-header>
 
   <div class="container mx-auto px-4 py-6">
     <!-- Page Title Section -->
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-white flex items-center gap-3">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-8 w-8"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
         </svg>
         Escanear Producto
       </h1>
@@ -27,32 +14,12 @@
 
     <!-- Camera View -->
     @if (isCapturing) {
-    <div
-      class="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden max-w-2xl mx-auto"
-    >
+    <div class="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden max-w-2xl mx-auto">
       <div class="p-6 border-b border-gray-100">
-        <h2
-          class="text-xl font-semibold text-gray-800 mb-1 flex items-center gap-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-            />
+        <h2 class="text-xl font-semibold text-gray-800 mb-1 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
           Cámara
         </h2>
@@ -64,33 +31,18 @@
       <div class="relative">
         <!-- Video Feed -->
         <div class="overflow-hidden relative rounded-lg mx-6">
-          <video
-            #video
-            class="w-full h-auto border rounded-lg shadow-inner bg-black"
-          ></video>
+          <video #video class="w-full h-auto border rounded-lg shadow-inner bg-black"></video>
 
           <!-- Scanning Overlay -->
-          <div
-            class="absolute top-0 left-0 right-0 bottom-0 pointer-events-none"
-          >
+          <div class="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
             <!-- Scanning Line Animation -->
-            <div
-              class="absolute top-0 left-0 right-0 h-0.5 bg-red-500 animate-[scanLine_2s_ease-in-out_infinite]"
-            ></div>
+            <div class="absolute top-0 left-0 right-0 h-0.5 bg-red-500 animate-[scanLine_2s_ease-in-out_infinite]"></div>
 
             <!-- Corner Markers -->
-            <div
-              class="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-blue-500 rounded-tl"
-            ></div>
-            <div
-              class="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-blue-500 rounded-tr"
-            ></div>
-            <div
-              class="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-blue-500 rounded-bl"
-            ></div>
-            <div
-              class="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-blue-500 rounded-br"
-            ></div>
+            <div class="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-blue-500 rounded-tl"></div>
+            <div class="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-blue-500 rounded-tr"></div>
+            <div class="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-blue-500 rounded-bl"></div>
+            <div class="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-blue-500 rounded-br"></div>
           </div>
 
           <canvas #canvas class="hidden"></canvas>
@@ -102,25 +54,9 @@
           (click)="captureImage()"
           class="w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white py-3 px-4 rounded-xl font-medium shadow-md transition-all duration-200 flex items-center justify-center gap-2"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
           Capturar
         </button>
@@ -128,49 +64,19 @@
     </div>
 
     <!-- Camera Instructions -->
-    <div
-      class="max-w-2xl mx-auto mt-8 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 text-white text-sm"
-    >
+    <div class="max-w-2xl mx-auto mt-8 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 text-white text-sm">
       <ul class="space-y-2">
         <li class="flex items-start gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 flex-shrink-0 mt-0.5 text-gray-800"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0 mt-0.5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span class="text-gray-600"
-            >Asegúrate de tener una buena iluminación para capturar el
-            código.</span
-          >
+          <span class="text-gray-600">Asegúrate de tener una buena iluminación para capturar el código.</span>
         </li>
         <li class="flex items-start gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 flex-shrink-0 mt-0.5 text-gray-800"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0 mt-0.5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span class="text-gray-600"
-            >Mantén estable la cámara y a una distancia adecuada del código de
-            barras.</span
-          >
+          <span class="text-gray-600">Mantén estable la cámara y a una distancia adecuada del código de barras.</span>
         </li>
       </ul>
     </div>
@@ -178,26 +84,11 @@
 
     <!-- Product Form -->
     @if (!isCapturing) {
-    <div
-      class="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden max-w-2xl mx-auto"
-    >
+    <div class="bg-white bg-opacity-90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden max-w-2xl mx-auto">
       <div class="p-6 border-b border-gray-100">
-        <h2
-          class="text-xl font-semibold text-gray-800 mb-1 flex items-center gap-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
+        <h2 class="text-xl font-semibold text-gray-800 mb-1 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
           Información del Producto
         </h2>
@@ -207,16 +98,10 @@
       </div>
 
       <div class="p-6">
-        <form
-          [formGroup]="productForm"
-          (ngSubmit)="submitProduct()"
-          class="space-y-6"
-        >
+        <form [formGroup]="productForm" (ngSubmit)="submitProduct()" class="space-y-6">
           <!-- Barcode Field -->
           <div class="relative">
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >Código de Barras</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1">Código de Barras</label>
             <div class="flex">
               <input
                 type="text"
@@ -225,19 +110,8 @@
                 readonly
               />
               <div class="absolute right-3 top-[2.1rem] text-gray-400">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                 </svg>
               </div>
             </div>
@@ -245,17 +119,14 @@
 
           <!-- Product Name Field -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >Nombre del Producto</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Producto</label>
             <input
               type="text"
               formControlName="name"
               class="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
 
-            @if (productForm.get('name')?.invalid &&
-            productForm.get('name')?.touched) {
+            @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
             <p class="mt-1 text-sm text-red-600">
               Nombre del producto es requerido
             </p>
@@ -264,9 +135,7 @@
 
           <!-- Brand Field -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >Marca</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1">Marca</label>
             <input
               type="text"
               formControlName="brand"
@@ -274,62 +143,9 @@
             />
           </div>
 
-          <!-- Size and Unit Fields -->
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1"
-                >Tamaño</label
-              >
-              <input
-                type="number"
-                formControlName="size"
-                class="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-
-              @if (productForm.get('size')?.invalid &&
-              productForm.get('size')?.touched) {
-              <p class="mt-1 text-sm text-red-600">El tamaño es requerido</p>
-              }
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1"
-                >Unidad</label
-              >
-              <select
-                formControlName="unit"
-                class="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
-              >
-                <option value="g">Gramos (g)</option>
-                <option value="kg">Kilogramos (kg)</option>
-                <option value="ml">Mililitros (ml)</option>
-                <option value="l">Litros (l)</option>
-                <option value="unidad">Unidad</option>
-              </select>
-              <div
-                class="absolute right-8 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <!-- Category Field -->
+          <!-- Category Field (Must come before size and unit to ensure dynamic updates) -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >Categoría</label
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
             <div class="relative">
               <select
                 formControlName="categoryId"
@@ -346,91 +162,159 @@
                 <option value="personal">Cuidado Personal</option>
                 <option value="other">Otros</option>
               </select>
-              <div
-                class="absolute right-3 top-3.5 pointer-events-none text-gray-500"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                  />
+              <div class="absolute right-3 top-3.5 pointer-events-none text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
               </div>
             </div>
           </div>
 
+          <!-- Size and Unit Fields (Conditionally displayed) -->
+          @if (showSizeAndUnit) {
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Tamaño</label>
+              <input
+                type="number"
+                formControlName="size"
+                class="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+
+              @if (productForm.get('size')?.invalid && productForm.get('size')?.touched) {
+              <p class="mt-1 text-sm text-red-600">El tamaño es requerido</p>
+              }
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Unidad</label>
+              <select
+                formControlName="unit"
+                class="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
+              >
+                <option value="g">Gramos (g)</option>
+                <option value="kg">Kilogramos (kg)</option>
+                <option value="ml">Mililitros (ml)</option>
+                <option value="l">Litros (l)</option>
+                <option value="unidad">Unidad</option>
+              </select>
+              <div class="absolute right-8 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          }
+
+          <!-- NEW FIELDS: Price and Purchase Info -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Precio</label>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
+                <input
+                  type="number"
+                  formControlName="price"
+                  step="0.01"
+                  min="0"
+                  class="w-full p-3 pl-8 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+              <p class="mt-1 text-sm text-red-600">Precio inválido</p>
+              }
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad</label>
+              <input
+                type="number"
+                formControlName="quantity"
+                min="1"
+                class="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              @if (productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched) {
+              <p class="mt-1 text-sm text-red-600">Cantidad inválida</p>
+              }
+            </div>
+          </div>
+
+          <!-- Discount and Purchase Location -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Descuento (%)</label>
+              <div class="relative rounded-lg overflow-hidden">
+                <input
+                  type="number"
+                  formControlName="discountPercentage"
+                  min="0"
+                  max="100"
+                  class="w-full p-3 pr-8 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <span class="text-gray-500">%</span>
+                </div>
+              </div>
+              @if (productForm.get('discountPercentage')?.invalid && productForm.get('discountPercentage')?.touched) {
+              <p class="mt-1 text-sm text-red-600">Descuento debe estar entre 0 y 100</p>
+              }
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Lugar de compra</label>
+              <input
+                type="text"
+                formControlName="purchaseLocation"
+                class="w-full p-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Ej: Coto, Carrefour..."
+              />
+            </div>
+          </div>
+
+          <!-- Final Price (Calculated) -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Precio Final</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
+              <input
+                type="number"
+                formControlName="finalPrice"
+                class="w-full p-3 pl-8 bg-gray-100 border border-gray-300 rounded-lg shadow-sm focus:outline-none cursor-not-allowed"
+                readonly
+              />
+            </div>
+            <p class="mt-1 text-xs text-gray-500">Precio final con descuento aplicado</p>
+          </div>
+
           <!-- Consumption Rate Field -->
           <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-1"
-              >Frecuencia de Consumo</label
-            >
-            <div
-              class="flex items-center justify-between bg-white border border-gray-300 rounded-lg p-1"
-            >
+            <label class="block text-sm font-medium text-gray-700 mb-1">Frecuencia de Consumo</label>
+            <div class="flex items-center justify-between bg-white border border-gray-300 rounded-lg p-1">
               <label
                 class="flex-1 text-center py-2 px-3 rounded-lg cursor-pointer"
-                [class.bg-green-500]="
-                  productForm.get('consumptionRate')?.value === 'low'
-                "
-                [class.text-white]="
-                  productForm.get('consumptionRate')?.value === 'low'
-                "
-                [class.text-gray-700]="
-                  productForm.get('consumptionRate')?.value !== 'low'
-                "
+                [class.bg-green-500]="productForm.get('consumptionRate')?.value === 'low'"
+                [class.text-white]="productForm.get('consumptionRate')?.value === 'low'"
+                [class.text-gray-700]="productForm.get('consumptionRate')?.value !== 'low'"
               >
-                <input
-                  type="radio"
-                  formControlName="consumptionRate"
-                  value="low"
-                  class="sr-only"
-                />
+                <input type="radio" formControlName="consumptionRate" value="low" class="sr-only" />
                 Baja
               </label>
               <label
                 class="flex-1 text-center py-2 px-3 rounded-lg cursor-pointer"
-                [class.bg-yellow-500]="
-                  productForm.get('consumptionRate')?.value === 'medium'
-                "
-                [class.text-white]="
-                  productForm.get('consumptionRate')?.value === 'medium'
-                "
-                [class.text-gray-700]="
-                  productForm.get('consumptionRate')?.value !== 'medium'
-                "
+                [class.bg-yellow-500]="productForm.get('consumptionRate')?.value === 'medium'"
+                [class.text-white]="productForm.get('consumptionRate')?.value === 'medium'"
+                [class.text-gray-700]="productForm.get('consumptionRate')?.value !== 'medium'"
               >
-                <input
-                  type="radio"
-                  formControlName="consumptionRate"
-                  value="medium"
-                  class="sr-only"
-                />
+                <input type="radio" formControlName="consumptionRate" value="medium" class="sr-only" />
                 Media
               </label>
               <label
                 class="flex-1 text-center py-2 px-3 rounded-lg cursor-pointer"
-                [class.bg-red-500]="
-                  productForm.get('consumptionRate')?.value === 'high'
-                "
-                [class.text-white]="
-                  productForm.get('consumptionRate')?.value === 'high'
-                "
-                [class.text-gray-700]="
-                  productForm.get('consumptionRate')?.value !== 'high'
-                "
+                [class.bg-red-500]="productForm.get('consumptionRate')?.value === 'high'"
+                [class.text-white]="productForm.get('consumptionRate')?.value === 'high'"
+                [class.text-gray-700]="productForm.get('consumptionRate')?.value !== 'high'"
               >
-                <input
-                  type="radio"
-                  formControlName="consumptionRate"
-                  value="high"
-                  class="sr-only"
-                />
+                <input type="radio" formControlName="consumptionRate" value="high" class="sr-only" />
                 Alta
               </label>
             </div>
@@ -443,25 +327,9 @@
               (click)="retryCapture()"
               class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               <span>Volver a Escanear</span>
             </button>
@@ -472,24 +340,11 @@
               class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-medium rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:from-green-400 disabled:to-emerald-500"
             >
               @if (isLoading) {
-              <div
-                class="h-5 w-5 border-2 border-t-transparent border-white rounded-full animate-spin"
-              ></div>
+              <div class="h-5 w-5 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
               <span>Guardando...</span>
               } @else {
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
               <span>Guardar Producto</span>
               }
@@ -501,23 +356,10 @@
 
     <!-- Error Message -->
     @if (errorMessage) {
-    <div
-      class="max-w-2xl mx-auto mt-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-md animate-fadeIn"
-    >
+    <div class="max-w-2xl mx-auto mt-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-md animate-fadeIn">
       <div class="flex items-start">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 text-red-600 mr-3 mt-0.5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-600 mr-3 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div>
           <p class="text-red-700">{{ errorMessage }}</p>
@@ -527,23 +369,10 @@
     }
 
     <!-- Tip -->
-    <div
-      class="max-w-2xl mx-auto mt-8 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 text-white text-sm"
-    >
+    <div class="max-w-2xl mx-auto mt-8 bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-4 text-white text-sm">
       <div class="flex items-start gap-3">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6 flex-shrink-0 mt-0.5 text-gray-800"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 flex-shrink-0 mt-0.5 text-gray-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div>
           <h3 class="font-medium mb-1 text-gray-600">Tip</h3>
@@ -558,7 +387,6 @@
   </div>
 </div>
 
-<!-- Custom animations for tailwind -->
 <style>
   @keyframes scanLine {
     0% {

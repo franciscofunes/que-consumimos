@@ -18,6 +18,11 @@ export interface Product {
     fats?: number;
   };
   description?: string;
+  price?: number;
+  quantity?: number;
+  purchaseLocation?: string;
+  discountPercentage?: number;
+  finalPrice?: number;
 }
 
 export interface ProductCreateDTO {
@@ -36,6 +41,11 @@ export interface ProductCreateDTO {
     fats?: number;
   };
   description?: string;
+  price?: number;
+  quantity?: number;
+  purchaseLocation?: string;
+  discountPercentage?: number;
+  finalPrice?: number;
 }
 
 export interface ProductUpdateDTO {
@@ -55,6 +65,11 @@ export interface ProductUpdateDTO {
     fats?: number;
   };
   description?: string;
+  price?: number;
+  quantity?: number;
+  purchaseLocation?: string;
+  discountPercentage?: number;
+  finalPrice?: number;
 }
 
 export interface ProductFilter {
