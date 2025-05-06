@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { AuthService } from '../../../../core/services/auth.service';
+import { Store } from '@ngrx/store';
+import { loginWithGoogle } from '../../../../store/auth/auth.actions';
 
 @Component({
   selector: 'app-login',
@@ -11,30 +11,36 @@ import { AuthService } from '../../../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule]
 })
-export class LoginComponent {
-  private authService = inject(AuthService);
+export class LoginComponent implements OnInit {
+  private store = inject(Store<{ auth: { user: any; loading: boolean; error: any } }>);
   private router = inject(Router);
   
-  // Using the loading$ Observable from AuthService
   loading$: Observable<boolean>;
-  error$: Observable<string | null> = of(null);
+  error$: Observable<string | null>;
   
   constructor() {
-    // Use the existing loading$ Observable from the service
-    this.loading$ = this.authService.loading$;
+    this.loading$ = this.store.select(state => state.auth.loading);
+    
+    this.error$ = this.store.select(state => {
+      if (state.auth.error) {
+        return typeof state.auth.error === 'string' 
+          ? state.auth.error 
+          : (state.auth.error.message || 'Error al iniciar sesión');
+      }
+      return null;
+    });
+  }
+  
+  ngOnInit(): void {
+    this.store.select(state => state.auth.user)
+      .subscribe(user => {
+        if (user) {
+          // this.router.navigate(['/dashboard']);
+        }
+      });
   }
   
   signInWithGoogle(): void {
-    this.error$ = of(null);
-    // Continuing to use the Observable pattern since the updated AuthService supports it
-    this.authService.signInWithGoogle().pipe(
-      tap(() => {
-        this.router.navigate(['/dashboard']);
-      }),
-      catchError(error => {
-        this.error$ = of(error.message || 'Error al iniciar sesión');
-        return of(null);
-      })
-    ).subscribe();
+    this.store.dispatch(loginWithGoogle());
   }
 }

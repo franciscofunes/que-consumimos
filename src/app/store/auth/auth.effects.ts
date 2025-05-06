@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
+import { from, of } from 'rxjs';
 import { map, switchMap, catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../core/services/auth.service';
+import { SerializableUser } from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
@@ -14,13 +15,40 @@ export class AuthEffects {
     private router: Router
   ) {}
 
+  private serializeUser(user: any): SerializableUser {
+    if (!user) {
+      return {
+        uid: null,
+        email: null,
+        displayName: null,
+        photoURL: null,
+        householdId: null
+      };
+    }
+    
+    return {
+      uid: user.uid || null,
+      email: user.email || null,
+      displayName: user.displayName || null,
+      photoURL: user.photoURL || null,
+      // Include any other serializable properties you need
+      householdId: user.householdId || null
+    };
+  }
+
   loginWithGoogle$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActions.loginWithGoogle),
       switchMap(() =>
         this.authService.signInWithGoogle().pipe(
-          map(userCredential => AuthActions.loginSuccess({ user: userCredential.user })),
-          catchError(error => of(AuthActions.loginFailure({ error })))
+          map(userCredential => {
+            const serializedUser = this.serializeUser(userCredential.user);
+            return AuthActions.loginSuccess({ user: serializedUser });
+          }),
+          catchError(error => {
+            const errorMessage = error?.message || 'Failed to login';
+            return of(AuthActions.loginFailure({ error: errorMessage }));
+          })
         )
       )
     )
@@ -30,7 +58,16 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
-        tap(() => this.router.navigate(['/dashboard']))
+        tap(() => {
+          // Only redirect if not already in the app
+          const currentPath = this.router.url;
+          if (currentPath === '/auth/login' || currentPath === '/auth/register') {
+            console.log('Login success effect - redirecting to dashboard from auth page');
+            this.router.navigate(['/dashboard']);
+          } else {
+            console.log('Login success effect - already in app, not redirecting');
+          }
+        })
       ),
     { dispatch: false }
   );
@@ -39,9 +76,12 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActions.logout),
       switchMap(() =>
-        this.authService.signOut().pipe(
+        from(this.authService.signOut()).pipe(
           map(() => AuthActions.logoutSuccess()),
-          catchError(error => of(AuthActions.logoutFailure({ error })))
+          catchError(error => {
+            const errorMessage = error?.message || 'Failed to logout';
+            return of(AuthActions.logoutFailure({ error: errorMessage }));
+          })
         )
       )
     )
@@ -63,11 +103,13 @@ export class AuthEffects {
         this.authService.getCurrentUser().pipe(
           map(user => {
             if (user) {
-              return AuthActions.loginSuccess({ user });
+              const serializedUser = this.serializeUser(user);
+              return AuthActions.loginSuccess({ user: serializedUser });
             } else {
               return AuthActions.logoutSuccess();
             }
-          })
+          }),
+          catchError(() => of(AuthActions.logoutSuccess()))
         )
       )
     )

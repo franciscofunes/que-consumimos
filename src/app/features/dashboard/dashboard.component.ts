@@ -1,10 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { logout } from '../../store/auth/auth.actions';
-import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from 'src/app/shared/components/header/header.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DestroyRef } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,33 +18,81 @@ import { HeaderComponent } from 'src/app/shared/components/header/header.compone
     HeaderComponent
   ]
 })
-export class DashboardComponent {
-  private store = inject(Store);
-  authService = inject(AuthService);
+export class DashboardComponent implements OnInit {
+  private store = inject(Store<{ 
+    auth: { user: any },
+    products: { items: any[] }
+  }>);
+  private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
+  
+  userName: string = '';
+  productCount: number = 0;
+  
+  ngOnInit(): void {
+    this.store.select(state => state.auth.user)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(user => {
+        if (!user) {
+          this.router.navigate(['/auth/login']);
+          return;
+        }
+        
+        this.userName = user.displayName || 'Usuario';
+      });
+    
+    this.store.select(state => state.products?.items || [])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(products => {
+        this.productCount = products.length;
+      });
+  }
   
   signOut(): void {
     this.store.dispatch(logout());
   }
 
-  // create property totalProducts that will return the total of products in the store
-  get totalProducts(): number {
-    return 0;
+  navigateToProducts(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Navigating to products');
+    this.router.navigate(['/products'])
+      .then(success => {
+        console.log('Navigation result:', success);
+        if (!success) {
+          console.warn('Navigation was prevented!');
+        }
+      })
+      .catch(err => console.error('Navigation error:', err));
+  }
+  
+  navigateToScanner(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Navigating to scanner');
+    this.router.navigate(['/product-scan'])
+      .then(success => {
+        console.log('Navigation result:', success);
+        if (!success) {
+          console.warn('Navigation was prevented!');
+        }
+      })
+      .catch(err => console.error('Navigation error:', err));
   }
 
-  // add property productAddedToday
+  get totalProducts(): number {
+    return this.productCount;
+  }
+
   get productsAddedToday(): number {
     return 0;
   }
 
-  // add property totalCategories
   get totalCategories(): number {
     return 0;
   }
 
-  // add property recentConsumptions
   get recentConsumption(): number {
     return 0;
   }
-
-
 }

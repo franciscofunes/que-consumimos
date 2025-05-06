@@ -3,8 +3,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Auth, GoogleAuthProvider, User, authState, signInWithPopup, signOut } from '@angular/fire/auth';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, from } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, from, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -132,6 +132,34 @@ export class AuthService {
       console.error('Error getting user household:', error);
       return null;
     }
+  }
+
+  getCurrentUser(): Observable<any | null> {
+    const userId = this.getUserId();
+    
+    if (!userId) {
+      return of(null);
+    }
+    
+    const userRef = doc(this.firestore, `users/${userId}`);
+    
+    return from(getDoc(userRef)).pipe(
+      map(userDoc => {
+        if (!userDoc.exists()) {
+          console.warn('User document not found');
+          return null;
+        }
+        
+        return {
+          ...userDoc.data(),
+          id: userDoc.id
+        };
+      }),
+      catchError(error => {
+        console.error('Error getting current user data:', error);
+        return of(null);
+      })
+    );
   }
   
   private async ensureUserHasHousehold(userId: string): Promise<void> {

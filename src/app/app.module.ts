@@ -16,6 +16,10 @@ import { SharedModule } from './shared/shared.module';
 
 import { AppComponent } from './app.component';
 import { environment } from 'src/environments/environment.prod';
+import { ProductEffects } from './store/product/product.effects';
+import { AuthEffects } from './store/auth/auth.effects';
+import { productReducer } from './store/product/product.reducer';
+import { authReducer } from './store/auth/auth.reducer';
 
 @NgModule({
   declarations: [],
@@ -26,8 +30,8 @@ import { environment } from 'src/environments/environment.prod';
     ReactiveFormsModule,
     AppRoutingModule,
     SharedModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
+    StoreModule.forFeature('products', productReducer),
+    EffectsModule.forRoot([ProductEffects, AuthEffects]),
   ],
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
